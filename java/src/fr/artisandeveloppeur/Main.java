@@ -17,28 +17,14 @@ public class Main {
             System.out.println("Reading file...");
             String line;
             Boolean first_line = true;
+            // Parcours du fichier pour traiter ligne par ligne
             while((line = bufferedReader.readLine()) != null) {
               try {
+                    // Traitement particulier dans le cas de la première ligne
                     if (first_line) {
                         first_line = false;
                     } else {
-                        String[] tokens = line.split(",");
-                        for (int i = 0; i < tokens.length; i++)
-                            tokens[i] = tokens[i].trim();
-
-                        if (tokens.length == 4 ) {
-                            String[] date = tokens[2].split("/");
-                            if (date.length == 3) {
-                                Calendar cal = Calendar.getInstance();
-                                if (cal.get(Calendar.DATE) == Integer.parseInt(date[0]) && cal.get(Calendar.MONTH) == (Integer.parseInt(date[1])-1)) {
-                                    Main.sendEmail(tokens[3], "Joyeux Anniversaire !", "Bonjour " + tokens[0] + ",\nJoyeux Anniversaire !\nA bientôt,");
-                                }
-                            } else {
-                                throw new Exception("Cannot read birthdate for " + tokens[0] + " " + tokens[1]);
-                            }
-                        } else {
-                            throw new Exception("Invalid file format");
-                        }
+                        processLine(line);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -55,10 +41,39 @@ public class Main {
         }
     }
 
-    public static void sendEmail(String to, String title, String body) {
-        System.out.println("Sending email to : " + to);
-        System.out.println("Title: " + title);
-        System.out.println("Body: Body\n" + body);
-        System.out.println("-------------------------");
+    private static void processLine(String line) throws Exception {
+        String[] tokens = line.split(",");
+        for (int i = 0; i < tokens.length; i++)
+            tokens[i] = tokens[i].trim();
+        // Vérifier que le tableau est valide
+        if (isValidToken(tokens)) {
+            String[] date = tokens[2].split("/");
+            // Vérifier que la date est valide
+            if (isValidDate(date)) {
+                Calendar cal = Calendar.getInstance();
+                // Est-ce une date anniversaire?
+                if (isAnniversaryDate(date, cal)) {
+                    MailBroker.sendEmail(tokens[3], "Joyeux Anniversaire !", "Bonjour "
+                            + tokens[0] + ",\nJoyeux Anniversaire !\nA bientôt,");
+                }
+            } else {
+                throw new Exception("Cannot read birthdate for " + tokens[0] + " " + tokens[1]);
+            }
+        } else {
+            throw new Exception("Invalid file format");
+        }
     }
+
+    private static boolean isValidToken(String[] tokens) {
+        return tokens.length == 4;
+    }
+
+    private static boolean isValidDate(String[] date) {
+        return date.length == 3;
+    }
+
+    private static boolean isAnniversaryDate(String[] date, Calendar cal) {
+        return cal.get(Calendar.DATE) == Integer.parseInt(date[0]) && cal.get(Calendar.MONTH) == (Integer.parseInt(date[1]) - 1);
+    }
+
 }
