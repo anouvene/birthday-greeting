@@ -9,7 +9,7 @@ import java.util.Calendar;
 public class Main {
 
     public static void main(String[] args) {
-        String fileName = "../employees.txt";
+        String fileName = "./resources/employees.txt";
         try {
             FileReader fileReader =  new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);

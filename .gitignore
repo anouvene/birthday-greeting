@@ -1,8 +1,7 @@
 .DS_Store
 
 # Java
-java/.idea/workspace.xml 
-java/.idea/tasks.xml
+java/.idea/
 out
 
 # .Net
@@ -123,3 +122,19 @@ iOSInjectionProject/
 ## Rust
 rust/target
 rust/Cargo.lock
+
+#Ignore other languages are not Java
+c#/
+cpp/
+dart/
+nodejs/
+php/
+python/
+ruby/
+rust/
+swift/ 
+
+#IntelliJ
+.idea/
+java/.idea/
+
